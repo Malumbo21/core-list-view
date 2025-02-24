@@ -15,4 +15,7 @@
 - **Multi-selection Support:** Toggle between single and multiple selection modes.
 - **Selection Management:** Allows enabling/disabling unselect on click.
 
+## 📸 Preview
+![NfxListView Screenshot](images/img.png)
+
 ***
