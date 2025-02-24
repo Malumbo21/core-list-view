@@ -1,0 +1,113 @@
+*{
+   -fx-background-insets: 0;
+}
+
+.header{
+    -fx-background-color: #F3F3F3;
+}
+
+.header .text-field{
+    -fx-min-height: 32;
+    -fx-min-width: 160;
+    -fx-pref-width: 200;
+    -fx-border-color: #b6b5b5;
+    -fx-background-radius: 0;
+    -fx-border-radius: 0;
+    -fx-font-size: 14;
+    -fx-text-fill: #34495E;
+}
+
+.header .text-field:focused{
+    -fx-border-color: #2980B9;
+}
+
+.header .button{
+    -fx-min-height: 32;
+    -fx-border-color: #b6b5b5;
+    -fx-background-color: #dadada;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+    -fx-text-fill: #34495E;
+    -fx-font-size: 12;
+    -fx-cursor: hand;
+}
+
+.header .button:hover{
+    -fx-border-color: #2980B9;
+}
+.header .button:armed{
+    -fx-border-color: #b6b5b5;
+}
+
+.header .label{
+    -fx-text-fill: #C0392B;
+    -fx-font-size: 14;
+    -fx-font-weight: bold;
+}
+
+.nfx-list-view,
+.nfx-list-view .scroll-pane,
+.nfx-list-view .scroll-pane .viewport{
+    -nfx-cell-height: 160 ;
+    -nfx-min-cell-width-break-point: 300;
+    -nfx-max-cells-per-row: 12;
+    -fx-background-color: #ffffff;
+}
+
+.nfx-list-view .nfx-content{
+    -fx-background-color: #ffffff;
+}
+.nfx-list-view .nfx-cell {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-border-width: 0;
+    -fx-border-radius: 0;
+    -fx-background-radius: 0;
+}
+
+.nfx-list-view .viewport {
+    -fx-background-insets: 0;
+    -fx-background-color: #ffffff;
+}
+
+/*
+============================================= CELL FACTORY =============================================================
+ */
+
+.cell-base{
+    -fx-background-color: transparent;
+}
+
+.cell-box{
+    -fx-background-color: #073196;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+}
+
+.cell-label{
+    -fx-text-fill: #ffffff;
+    -fx-font-size: 16;
+}
+
+
+.nfx-list-view{
+    -nfx-cell-height: 220 ;
+    -nfx-min-cell-width-break-point: 480;
+    -nfx-max-cells-per-row: 12;
+}
+
+.nfx-list-view  .nfx-cell{
+    -fx-border-width: 0;
+    -fx-border-color: transparent;
+}
+
+.nfx-list-view  .nfx-cell .cell-box:hover{
+    -fx-cursor: hand;
+}
+
+.nfx-list-view  .nfx-cell:selected .cell-box{
+    -fx-background-color: #0f8870;
+}
+
+
+

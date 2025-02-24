@@ -1,0 +1,3 @@
+rootProject.name = "core-list"
+include('list')
+include('demo')

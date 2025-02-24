@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+
+
+<?import xss.it.nfx.list.NfxListView?>
+<AnchorPane prefHeight="599.0" prefWidth="1118.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <HBox alignment="CENTER_LEFT" layoutX="210.0" layoutY="26.0" prefHeight="50.0" prefWidth="974.0" styleClass="header" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <TextField fx:id="searchTxt" prefHeight="25.0" prefWidth="200.0">
+               <HBox.margin>
+                  <Insets left="20.0" />
+               </HBox.margin>
+            </TextField>
+            <Button fx:id="factoryBtn" mnemonicParsing="false" text="Cell Factory">
+               <HBox.margin>
+                  <Insets left="10.0" />
+               </HBox.margin>
+            </Button>
+            <Button fx:id="randScrollBtn" layoutX="310.0" layoutY="23.0" mnemonicParsing="false" text="Random Scroll">
+               <HBox.margin>
+                  <Insets left="5.0" />
+               </HBox.margin>
+            </Button>
+            <Button fx:id="clearSelectionBtn" layoutX="388.0" layoutY="23.0" mnemonicParsing="false" text="Clear Selection">
+               <HBox.margin>
+                  <Insets left="5.0" />
+               </HBox.margin>
+            </Button>
+            <Button fx:id="refreshBtn" layoutX="481.0" layoutY="23.0" mnemonicParsing="false" text="Refresh">
+               <HBox.margin>
+                  <Insets left="5.0" />
+               </HBox.margin>
+            </Button>
+            <Button fx:id="enableUnselectBtn" layoutX="576.0" layoutY="23.0" mnemonicParsing="false" text="Enable Unselect on click">
+               <HBox.margin>
+                  <Insets left="5.0" />
+               </HBox.margin>
+            </Button>
+            <Button fx:id="multiSelectionBtn" layoutX="632.0" layoutY="23.0" mnemonicParsing="false" text="Enable Multiselection (Ctrl + Click)">
+               <HBox.margin>
+                  <Insets left="5.0" />
+               </HBox.margin>
+            </Button>
+            <HBox prefHeight="50.0" prefWidth="64.0" HBox.hgrow="ALWAYS" />
+            <Label fx:id="counterTxt" text="Counter">
+               <HBox.margin>
+                  <Insets right="20.0" />
+               </HBox.margin>
+            </Label>
+         </children>
+      </HBox>
+      <NfxListView fx:id="listView" layoutX="332.0" layoutY="189.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="50.0" />
+   </children>
+</AnchorPane>
