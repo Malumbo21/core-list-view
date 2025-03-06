@@ -4,6 +4,7 @@ import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -29,6 +30,7 @@ import java.util.Random;
 import java.util.ResourceBundle;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.function.Predicate;
 
 /**
  * @author XDSSWAR
@@ -134,14 +136,17 @@ public final class NfxListController extends AnchorPane implements Initializable
             }
         });
 
+
+
         /*
          * Sets the action for the random scroll button to scroll to a random item.
          */
         randScrollBtn.setOnAction(event -> {
-            int index = rand(listView.getItems().size() - 1);
+            /*int index = rand(listView.getItems().size() - 1);
             Person person = listView.getItems().get(index);
             listView.scrollToItem(person);
-            listView.getSelectionModel().select(person);
+            listView.getSelectionModel().select(person);*/
+            listView.getItems().removeAll(listView.getSelectionModel().getSelectedItems());
         });
 
         /*
@@ -185,7 +190,12 @@ public final class NfxListController extends AnchorPane implements Initializable
         listView.allowUnselectOnClickProperty().addListener((obs, o, enabled) -> {
             handleUnselectOnClick(enabled);
         });
+
+        listView.countProperty().addListener((obs, o, c) -> {
+            counterTxt.setText(String.format("Total : %s", c));
+        });
     }
+
 
 
     /**
@@ -213,8 +223,7 @@ public final class NfxListController extends AnchorPane implements Initializable
                 Platform.runLater(() -> {
                     listView.getItems().clear();
                     listView.setItems(personObservableList);
-                    counterTxt.setText(String.format("Total : %s", listView.getItems().size()));
-                    filter(listView, searchTxt);
+                    filter();
                 });
             }
         });
@@ -228,49 +237,20 @@ public final class NfxListController extends AnchorPane implements Initializable
     /**
      * Filters the {@code listView} based on the text input in {@code textField}.
      * Updates the displayed list dynamically as the user types.
-     *
-     * @param listView   the {@link NfxListView} containing {@link Person} objects
-     * @param textField  the {@link TextField} used for input filtering
      */
-    private void filter(NfxListView<Person> listView, TextField textField) {
-        ObservableList<Person> originalItems = listView.getItems();
-
-        textField.textProperty().addListener((observable, oldValue, newValue) -> {
-            String filter = newValue.toLowerCase();
-
-            /*
-             * Asynchronous task to filter the list based on user input.
-             */
-            Task<FilteredList<Person>> task = new Task<>() {
-                @Override
-                protected FilteredList<Person> call() {
-                    return new FilteredList<>(originalItems, person -> {
-                        if (filter.isEmpty()) {
-                            return true; // No filter applied
-                        }
-                        return (person.getName().toLowerCase().contains(filter))
-                                || (person.getEmail().toLowerCase().contains(filter))
-                                || (person.getCity().toLowerCase().contains(filter));
-                    });
+    private void filter(){
+        FilteredList<Person> filteredList = new FilteredList<>(listView.getItems(),e->true);
+        searchTxt.textProperty().addListener((obs, o, text) -> {
+            filteredList.setPredicate((Predicate<? super Person>) p->{
+                if (text.isBlank()){
+                    return true;
                 }
+                String s = text.toLowerCase();
+                return p.getName().toLowerCase().contains(s);
+            });
 
-                @Override
-                protected void succeeded() {
-                    /*
-                     * Updates the {@code listView} with the filtered results.
-                     */
-                    ObservableList<Person> list = FXCollections.observableArrayList(getValue());
-                    Platform.runLater(() -> {
-                        listView.setItems(list);
-                        counterTxt.setText(String.format("Total : %s", listView.getItems().size()));
-                    });
-                }
-            };
-
-            /*
-             * Submits the filtering task to the thread pool for execution.
-             */
-            THREAD_POOL.submit(task);
+            SortedList<Person> sortedList = new SortedList<>(filteredList);
+            listView.setItems(FXCollections.observableArrayList(sortedList));
         });
     }
 

@@ -1,10 +1,7 @@
 package com.xss.it.nfx.list.internals;
 
 
-import javafx.animation.Interpolator;
-import javafx.animation.KeyFrame;
-import javafx.animation.KeyValue;
-import javafx.animation.Timeline;
+import javafx.animation.*;
 import javafx.beans.DefaultProperty;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
@@ -21,7 +18,8 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.util.Callback;
 import javafx.util.Duration;
-import xss.it.nfx.list.*;
+import xss.it.nfx.list.NfxCell;
+import xss.it.nfx.list.NfxListView;
 import xss.it.nfx.list.event.NfxEditEvent;
 import xss.it.nfx.list.misc.SelectionModel;
 
@@ -159,8 +157,8 @@ public final class BaseListView<T> extends ScrollPane {
                         }
                     }
                 }
+                setCount(getItems().size());
             }
-
             onUpdate();
         };
 
@@ -187,6 +185,7 @@ public final class BaseListView<T> extends ScrollPane {
         selectionModeProperty().addListener((obs, o, mode) -> handleSelectionMode(mode));
         getSelectionModel().getSelectedItems().addListener(selectionModelChangeListener);
 
+
         itemsProperty().addListener((obs, o, n) -> {
             if (o != null) {
                 o.removeListener(listChangeListener);
@@ -197,6 +196,7 @@ public final class BaseListView<T> extends ScrollPane {
              * Clear selected items
              */
             getSelectionModel().clearSelection();
+            setCount(n.size());
             onUpdate();
         });
 
@@ -217,6 +217,50 @@ public final class BaseListView<T> extends ScrollPane {
         });
 
         onUpdate();
+
+        if (getItems().isEmpty()){
+            PauseTransition pt =new PauseTransition(Duration.millis(60));
+            pt.setOnFinished(event -> {
+                updateCells();
+            });
+            pt.play();
+        }
+    }
+
+
+    /**
+     * Property representing the count of items.
+     */
+    private IntegerProperty count;
+
+    /**
+     * Retrieves the current count value.
+     *
+     * @return the count value
+     */
+    public int getCount() {
+        return countProperty().get();
+    }
+
+    /**
+     * Returns the IntegerProperty containing the count.
+     *
+     * @return the IntegerProperty for the count
+     */
+    public IntegerProperty countProperty() {
+        if (count == null) {
+            count = new SimpleIntegerProperty(this, "count", 0);
+        }
+        return count;
+    }
+
+    /**
+     * Sets the count value.
+     *
+     * @param count the new count value to set
+     */
+    private void setCount(int count) {
+        countProperty().set(count);
     }
 
 
@@ -538,7 +582,6 @@ public final class BaseListView<T> extends ScrollPane {
         onEditCancelProperty().set(onEditCancel);
     }
 
-
     /*
      * =================================== STYLEABLES ==================================================================
      */
@@ -730,9 +773,11 @@ public final class BaseListView<T> extends ScrollPane {
     }
 
 
+
     /*
      * ============================================= UTILS =============================================================
      */
+
 
     /**
      * Scrolls to the cell containing the specified item.
@@ -780,9 +825,6 @@ public final class BaseListView<T> extends ScrollPane {
         getScene().addEventFilter(KeyEvent.KEY_PRESSED, new WeakEventHandler<>(keyPressedEvent));
         getScene().addEventFilter(KeyEvent.KEY_RELEASED, new WeakEventHandler<>(keyReleasedEvent));
     }
-
-
-
 
     /**
      * Handles the resizing logic of the virtual flow.

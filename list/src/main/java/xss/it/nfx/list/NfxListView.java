@@ -4,14 +4,15 @@ package xss.it.nfx.list;
 import com.xss.it.nfx.list.internals.BaseListView;
 import com.xss.it.nfx.list.skin.NfxListViewSkin;
 import javafx.beans.DefaultProperty;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.*;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.css.StyleableDoubleProperty;
 import javafx.css.StyleableIntegerProperty;
 import javafx.event.EventHandler;
+import javafx.scene.Node;
 import javafx.scene.control.Control;
+import javafx.scene.control.Label;
 import javafx.scene.control.Skin;
 import javafx.util.Callback;
 import xss.it.nfx.list.event.NfxEditEvent;
@@ -50,6 +51,23 @@ public final class NfxListView<T> extends Control {
         delegate.getStyleClass().add(STYLE_CLASS);
     }
 
+    /**
+     * Retrieves the current count of elements in the list.
+     *
+     * @return the number of elements in the list
+     */
+    public int getCount() {
+        return countProperty().get();
+    }
+
+    /**
+     * Returns the read-only integer property representing the count of elements in the list.
+     *
+     * @return a {@link ReadOnlyIntegerProperty} containing the count value
+     */
+    public ReadOnlyIntegerProperty countProperty() {
+        return delegate.countProperty();
+    }
 
     /**
      * Returns the items property.
@@ -72,7 +90,7 @@ public final class NfxListView<T> extends Control {
      * @param items the new list of items
      */
     public void setItems(ObservableList<T> items) {
-        delegate.setItems(items);
+        delegate.setItems(items == null ? FXCollections.observableArrayList() : items);
     }
 
 
@@ -412,6 +430,42 @@ public final class NfxListView<T> extends Control {
     }
 
     /**
+     * Property for managing the placeholder node.
+     */
+    private ObjectProperty<Node> placeHolder;
+
+    /**
+     * Retrieves the current placeholder node.
+     *
+     * @return the current placeholder Node
+     */
+    public Node getPlaceHolder() {
+        return placeHolderProperty().get();
+    }
+
+    /**
+     * Returns the ObjectProperty containing the placeholder node.
+     *
+     * @return the ObjectProperty for the placeholder node
+     */
+    public ObjectProperty<Node> placeHolderProperty() {
+        if (placeHolder == null){
+            placeHolder = new SimpleObjectProperty<>(this,"placeHolder", defaultPlaceholder());
+        }
+        return placeHolder;
+    }
+
+    /**
+     * Sets the placeholder node.
+     *
+     * @param placeHolder the Node to set as the placeholder
+     */
+    public void setPlaceHolder(Node placeHolder) {
+        placeHolderProperty().set(placeHolder);
+    }
+
+
+    /**
      * Refreshes the list view.
      * Temporarily sets the items to an empty list and then resets them to trigger a refresh.
      */
@@ -436,20 +490,21 @@ public final class NfxListView<T> extends Control {
     }
 
     /**
-     * Returns the user agent stylesheet for this component.
+     * Creates a default placeholder node displaying a message when no items are available.
      *
-     * @return the stylesheet URL as a {@link String}
+     * @return a Label styled as a placeholder message
      */
+    private Node defaultPlaceholder() {
+        Label label = new Label("No items available");
+        label.setStyle("-fx-font-size: 16; -fx-text-fill: gray;");
+        return label;
+    }
+
     @Override
     public String getUserAgentStylesheet() {
         return STYLE_SHEET;
     }
 
-    /**
-     * Creates the default skin for this component.
-     *
-     * @return the default {@link Skin} instance for {@code NfxListView}
-     */
     @Override
     protected Skin<?> createDefaultSkin() {
         return new NfxListViewSkin<>(this, delegate);
